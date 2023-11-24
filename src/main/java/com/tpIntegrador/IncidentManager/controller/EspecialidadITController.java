@@ -1,7 +1,8 @@
 package com.tpIntegrador.IncidentManager.controller;
 
-import com.tpIntegrador.IncidentManager.model.Cliente;
-import com.tpIntegrador.IncidentManager.repository.ClienteRepository;
+
+import com.tpIntegrador.IncidentManager.model.EspecialidadIT;
+import com.tpIntegrador.IncidentManager.repository.EspecialidadITRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,16 +16,16 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class ClienteController {
+public class EspecialidadITController {
 
-    private final Logger log = LoggerFactory.getLogger(ClienteController.class);
+    private final Logger log = LoggerFactory.getLogger(EspecialidadITController.class);
 
     // Atributos
-    private ClienteRepository clienteRepository;
+    private EspecialidadITRepository especialidadITRepository;
     // Construct
 
-    public ClienteController(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
+    public EspecialidadITController(EspecialidadITRepository especialidadITRepository) {
+        this.especialidadITRepository = especialidadITRepository;
     }
 
 
@@ -35,10 +36,10 @@ public class ClienteController {
      * http://localhost:8080/api/clientes
      * @return
     */
-    @GetMapping("/api/clientes") // el nombre de la entidad en plural y api porque es una api rest.
-    public List<Cliente> findAll(){
+    @GetMapping("/api/especialidadITs") // el nombre de la entidad en plural y api porque es una api rest.
+    public List<EspecialidadIT> findAll(){
         // Recuperar y devolver los clientes de la base de datos.
-        return clienteRepository.findAll();
+        return especialidadITRepository.findAll();
     }
 
     /**
@@ -50,19 +51,19 @@ public class ClienteController {
      */
 
     // Buscar un solo cliente en la base de datos según su id.
-    @GetMapping("/api/clientes/{id}") // {id} es un parámetro variable que generara por ejemplo /api/clientes/2.
+    @GetMapping("/api/especialidadITs/{id}") // {id} es un parámetro variable que generara por ejemplo /api/clientes/2.
     @Operation(summary = "Buscar por id", description = "Busca un cliente por clave primaria id Long")
-    public ResponseEntity<Cliente> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
+    public ResponseEntity<EspecialidadIT> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
         //@PathVariable vincula id con {id}
 
-        Optional<Cliente> clienteOpt = clienteRepository.findById(id); //
+        Optional<EspecialidadIT>espOpt = especialidadITRepository.findById(id); //
         // @PathVariable
         // envuelve el id y el null
         // Opción 1
 
-        if(clienteOpt.isPresent()) {
+        if(espOpt.isPresent()) {
             // Con ResponseEntity obtenemos un 404 si no se encuentra al cliente.
-            return ResponseEntity.ok(clienteOpt.get()); // devuelve el cliente.
+            return ResponseEntity.ok(espOpt.get()); // devuelve el cliente.
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -77,19 +78,20 @@ public class ClienteController {
      * @param headers
      * @return
      */
-    @PostMapping("/api/clientes") // Como son métodos diferentes no colisionan las url.
+    @PostMapping("/api/especialidadITs") // Como son métodos diferentes no colisionan las url.
     @Operation(summary = "Crear un cliente", description = "Con este método podemos dar de alta a un cliente en la base" +
             " de datos.")
-    public ResponseEntity<Cliente> create(@RequestBody Cliente cliente, @RequestHeader HttpHeaders headers){
+    public ResponseEntity<EspecialidadIT> create(@RequestBody EspecialidadIT especialidadIT,
+                                                 @RequestHeader HttpHeaders headers){
         // También podría devolver un void o lo que se necesite
         System.out.println(headers.get("User-Agent")); // No siempre es necesario las cabeceras.
         // Guardar el cliente recibido por parámetro en la base de datos.
-        if (cliente.getId() != null){ // Quiere decir que existe el id, y por lo tanto no es una creación.
+        if (especialidadIT.getId() != null){ // Quiere decir que existe el id, y por lo tanto no es una creación.
             log.warn("trying to create a customer with id");
             System.out.println("trying to create a customer with id");
             return ResponseEntity.badRequest().build();
         }
-        Cliente result = clienteRepository.save(cliente);
+        EspecialidadIT result = especialidadITRepository.save(especialidadIT);
         return ResponseEntity.ok(result); // El cliente devuelto tiene una clave primaria.
     }
 
@@ -97,34 +99,34 @@ public class ClienteController {
     /**
      * Actualizar los datos de un cliente en la base de datos.
      */
-    @PutMapping("/api/clientes")
+    @PutMapping("/api/especialidadITs")
     @Operation(summary = "Modificar datos de cliente", description = "Modificar los datos de un cliente en la base." +
             "de datos según clave primaria id Long")
-    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
-        if(cliente.getId() == null){ // si no tiene id quiere decir que si es una creación.
+    public ResponseEntity<EspecialidadIT> update(@RequestBody EspecialidadIT especialidadIT) {
+        if(especialidadIT.getId() == null){ // si no tiene id quiere decir que si es una creación.
             log.warn("Trying to update a non existent customer");
             return ResponseEntity.badRequest().build();
         }
-        if(!clienteRepository.existsById(cliente.getId())) {
+        if(!especialidadITRepository.existsById(especialidadIT.getId())) {
             log.warn("Trying to update a non existent customer");
             return ResponseEntity.notFound().build();
         }
 
         // El proceso de actualización.
-        Cliente result = clienteRepository.save(cliente);
+        EspecialidadIT result = especialidadITRepository.save(especialidadIT);
         return ResponseEntity.ok(result); // El cliente devuelto tiene una clave primaria.
     }
 
     // Borrar un cliente de la base de datos por id.
     @Operation(summary = "ATENCIÓN: eliminar un cliente", description = "Con este método podemos eliminar a un " +
             "cliente según su clave primaria id Long")
-    @DeleteMapping("/api/cliente/{id}")
-    public ResponseEntity<Cliente> delete(@PathVariable Long id) {
-        if (!clienteRepository.existsById(id)) {
+    @DeleteMapping("/api/especialidadITs/{id}")
+    public ResponseEntity<EspecialidadIT> delete(@PathVariable Long id) {
+        if (!especialidadITRepository.existsById(id)) {
             log.warn("Trying to delete a non existent customer");
             return ResponseEntity.notFound().build();
         }
-        clienteRepository.deleteById(id);
+        especialidadITRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -133,10 +135,10 @@ public class ClienteController {
     @Operation(summary = "ATENCIÓN: eliminar TODOS los clientes", description = "Con este método eliminamos todos los " +
             "clientes de la base de datos")
     @Hidden
-    @DeleteMapping("/api/clientes")
-    public ResponseEntity<Cliente> deleteAll() {
+    @DeleteMapping("/api/especialidadITs")
+    public ResponseEntity<EspecialidadIT> deleteAll() {
         log.info("REST Request for delete all customers");
-        clienteRepository.deleteAll();
+        especialidadITRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
 
