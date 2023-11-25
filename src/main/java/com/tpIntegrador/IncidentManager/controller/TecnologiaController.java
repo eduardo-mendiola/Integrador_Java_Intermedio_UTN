@@ -131,7 +131,7 @@ public class TecnologiaController {
     @Operation(summary = "ATENCIÓN: eliminar TODOS las tecnologías", description = "Con este método eliminamos todos los " +
             "técnicos de la base de datos")
     @Hidden
-    @DeleteMapping("/api/tecnicos")
+    @DeleteMapping("/api/tecnologias")
     public ResponseEntity<Tecnologia> deleteAll() {
         log.info("REST Request for delete all technicals");
         tecnologiaRepository.deleteAll();

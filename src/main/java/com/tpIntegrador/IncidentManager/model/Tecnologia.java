@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.CollationElementIterator;
+import java.util.Collection;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -22,13 +25,13 @@ public class Tecnologia {
     private Long id;
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "contratoServ_id")
-    private ContratoServ contratoServ;
+    @ManyToMany(mappedBy = "tecnologias", cascade = CascadeType.ALL)
+    //@JoinColumn(name = "contratoServ_id")
+    private Collection<ContratoServ> contratoServ;
 
-    @ManyToOne
-    @JoinColumn(name = "especialidadIT_id")
-    private EspecialidadIT especialidadIT;
+    @ManyToMany(mappedBy = "tecnologias", cascade = CascadeType.ALL)
+    //@JoinColumn(name = "especialidadIT_id")
+    private Collection<EspecialidadIT> especialidadIT;
 }
 
 

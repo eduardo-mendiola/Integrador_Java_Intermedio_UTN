@@ -26,8 +26,12 @@ public class EspecialidadIT {
 
     private String nombre;
 
-    @OneToMany(mappedBy = "especialidadIT", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tecnologia> tecnologia;
+    @ManyToMany
+    private Collection<Tecnologia> tecnologias;
+
+    @ManyToMany(mappedBy = "especialidadIts",cascade = CascadeType.ALL)
+    //@JoinColumn(name = "tecnico_id")
+    private Collection<Tecnico> tecnicos;
 }
 
 

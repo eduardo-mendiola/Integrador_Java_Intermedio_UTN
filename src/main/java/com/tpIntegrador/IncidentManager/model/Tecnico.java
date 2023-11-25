@@ -30,11 +30,10 @@ public class Tecnico {
     private String dni;
     private String email;
     private String telefono;
+    private MedioNoti medioNoti;
 
     @Schema(description = "Elegir una o más especialidades.")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "tecnico_id")
-    private Collection<EspecialidadIT> especialidades = new ArrayList<>();
+    @ManyToMany
+    private Collection<EspecialidadIT> especialidadIts;
 
-    private MedioNoti medioNoti;
 }

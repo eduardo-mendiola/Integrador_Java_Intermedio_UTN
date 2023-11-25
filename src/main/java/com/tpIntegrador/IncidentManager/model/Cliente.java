@@ -3,8 +3,8 @@ package com.tpIntegrador.IncidentManager.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.Collection;
 
-import java.util.ArrayList;
 
 // Lombok
 @NoArgsConstructor
@@ -29,6 +29,9 @@ public class Cliente {
     private String dni;
     private String email;
     private String telefono;
+
     @Schema(description = "Elegir una o más contratos.")
-    private ArrayList<ContratoServ> contratos;
+    @ManyToMany
+    private Collection<ContratoServ> contratos;
+
 }
