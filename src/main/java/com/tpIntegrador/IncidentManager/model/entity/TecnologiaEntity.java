@@ -1,37 +1,33 @@
-package com.tpIntegrador.IncidentManager.model;
+package com.tpIntegrador.IncidentManager.model.entity;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.text.CollationElementIterator;
 import java.util.Collection;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data //@Data: Anotación que combina las funcionalidades de @ToString, @EqualsAndHashCode, @Getter, y @Setter.
 
 @Entity
 @Table(name = "tecnologia") // Para cambiar el monbre en la base de datos
 @Schema(title = "TECNOLOGÍA_APP", description = "Tecnología, APP o software que forman parte de los servicios contratados " +
         "y de las especialidades de los técnicos.")
-public class Tecnologia {
+public class TecnologiaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
 
     @ManyToMany(mappedBy = "tecnologias", cascade = CascadeType.ALL)
-    //@JoinColumn(name = "contratoServ_id")
-    private Collection<ContratoServ> contratoServ;
+    @Hidden // Anotación para ignorar en Swagger
+    private Collection<ContratoEntity> contrato;
 
     @ManyToMany(mappedBy = "tecnologias", cascade = CascadeType.ALL)
-    //@JoinColumn(name = "especialidadIT_id")
-    private Collection<EspecialidadIT> especialidadIT;
+    @Hidden // Anotación para ignorar en Swagger
+    private Collection<EspecialidadEntity> especialidades;
 }
 
 

@@ -1,6 +1,6 @@
 package com.tpIntegrador.IncidentManager.controller;
 
-import com.tpIntegrador.IncidentManager.model.Tecnologia;
+import com.tpIntegrador.IncidentManager.model.entity.TecnologiaEntity;
 import com.tpIntegrador.IncidentManager.repository.TecnologiaRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,8 @@ public class TecnologiaController {
      * @return
     */
     @GetMapping("/api/tecnologias") // el nombre de la entidad en plural y api porque es una api rest.
-    public List<Tecnologia> findAll(){
+    @Operation(summary = "Consultar todas las tecnologías", description = "Busca todas las tecnologías de la base de datos.")
+    public List<TecnologiaEntity> findAll(){
         // Recuperar y devolver las tecnologías de la base de datos.
         return tecnologiaRepository.findAll();
     }
@@ -50,10 +51,10 @@ public class TecnologiaController {
     // Buscar un solo técnico en la base de datos según su id.
     @GetMapping("/api/tecnologias/{id}") // {id} es un parámetro variable que generara por ejemplo /api/tecnologia/2.
     @Operation(summary = "Buscar por id", description = "Busca una tecnología por clave primaria id Long")
-    public ResponseEntity<Tecnologia> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
+    public ResponseEntity<TecnologiaEntity> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
         //@PathVariable vincula id con {id}
 
-        Optional<Tecnologia> tecAppOpt = tecnologiaRepository.findById(id); //
+        Optional<TecnologiaEntity> tecAppOpt = tecnologiaRepository.findById(id); //
         // @PathVariable
         // envuelve el id y el null
         // Opción 1
@@ -71,14 +72,14 @@ public class TecnologiaController {
     /**
      * Crear una nueva tecnología en la base de datos.
      * Método POST, no colisiona con findAll, porque son diferentes métodos HTTP: GET vs. POST.
-     * @param tecnologia
+     * @param tecnologiaEntity
      * @param headers
      * @return
      */
     @PostMapping("/api/tecnologias") // Como son métodos diferentes no colisionan las url.
     @Operation(summary = "Crear una tecnología", description = "Con este método podemos dar de alta a un técnico en la " +
             "base de datos.")
-    public ResponseEntity<Tecnologia> create(@RequestBody Tecnologia tecnologia, @RequestHeader HttpHeaders headers){
+    public ResponseEntity<TecnologiaEntity> create(@RequestBody TecnologiaEntity tecnologia, @RequestHeader HttpHeaders headers){
         // También podría devolver un void o lo que se necesite.
         System.out.println(headers.get("User-Agent")); // No siempre es necesario las cabeceras.
         // Guardar el técnico recibido por parámetro en la base de datos.
@@ -87,7 +88,7 @@ public class TecnologiaController {
             System.out.println("trying to create a technical with id");
             return ResponseEntity.badRequest().build();
         }
-        Tecnologia result = tecnologiaRepository.save(tecnologia);
+        TecnologiaEntity result = tecnologiaRepository.save(tecnologia);
         return ResponseEntity.ok(result); // La tecnología devuelta tiene una clave primaria.
     }
 
@@ -95,10 +96,10 @@ public class TecnologiaController {
     /**
      * Actualizar los datos de una tecnología en la base de datos.
      */
-    @PutMapping("/api/tecnologia")
+    @PutMapping("/api/tecnologias")
     @Operation(summary = "Modificar datos de una tecnología", description = "Modificar los datos de una tecnología en la " +
             "base de datos según clave primaria id Long")
-    public ResponseEntity<Tecnologia> update(@RequestBody Tecnologia tecnologia) {
+    public ResponseEntity<TecnologiaEntity> update(@RequestBody TecnologiaEntity tecnologia) {
         if(tecnologia.getId() == null){ // si no tiene id quiere decir que si es una creación.
             log.warn("Trying to update a nonexistent technology.");
             return ResponseEntity.badRequest().build();
@@ -109,15 +110,15 @@ public class TecnologiaController {
         }
 
         // El proceso de actualización.
-        Tecnologia result = tecnologiaRepository.save(tecnologia);
+        TecnologiaEntity result = tecnologiaRepository.save(tecnologia);
         return ResponseEntity.ok(result); // La tecnología devuelta tiene una clave primaria.
     }
 
     // Borrar una tecnología de la base de datos por id.
     @Operation(summary = "ATENCIÓN: eliminar una tecnología", description = "Con este método podemos eliminar a una " +
             "técnologia según su clave primaria id Long")
-    @DeleteMapping("/api/tecnologia/{id}")
-    public ResponseEntity<Tecnologia> delete(@PathVariable Long id) {
+    @DeleteMapping("/api/tecnologias/{id}")
+    public ResponseEntity<TecnologiaEntity> delete(@PathVariable Long id) {
         if (!tecnologiaRepository.existsById(id)) {
             log.warn("Trying to delete a non existent technology.");
             return ResponseEntity.notFound().build();
@@ -126,13 +127,13 @@ public class TecnologiaController {
         return ResponseEntity.noContent().build();
     }
 
-    // Borrar todos las tecnologías de la base de datos.
+    // Borrar todas las tecnologías de la base de datos.
 
     @Operation(summary = "ATENCIÓN: eliminar TODOS las tecnologías", description = "Con este método eliminamos todos los " +
             "técnicos de la base de datos")
     @Hidden
     @DeleteMapping("/api/tecnologias")
-    public ResponseEntity<Tecnologia> deleteAll() {
+    public ResponseEntity<TecnologiaEntity> deleteAll() {
         log.info("REST Request for delete all technicals");
         tecnologiaRepository.deleteAll();
         return ResponseEntity.noContent().build();

@@ -1,6 +1,6 @@
 package com.tpIntegrador.IncidentManager.controller;
 
-import com.tpIntegrador.IncidentManager.model.Cliente;
+import com.tpIntegrador.IncidentManager.model.entity.ClienteEntity;
 import com.tpIntegrador.IncidentManager.repository.ClienteRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +36,8 @@ public class ClienteController {
      * @return
     */
     @GetMapping("/api/clientes") // el nombre de la entidad en plural y api porque es una api rest.
-    public List<Cliente> findAll(){
+    @Operation(summary = "Consultar todos los clientes", description = "Busca todos los clientes de la base de datos.")
+    public List<ClienteEntity> findAll(){
         // Recuperar y devolver los clientes de la base de datos.
         return clienteRepository.findAll();
     }
@@ -52,10 +53,10 @@ public class ClienteController {
     // Buscar un solo cliente en la base de datos según su id.
     @GetMapping("/api/clientes/{id}") // {id} es un parámetro variable que generara por ejemplo /api/clientes/2.
     @Operation(summary = "Buscar por id", description = "Busca un cliente por clave primaria id Long")
-    public ResponseEntity<Cliente> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
+    public ResponseEntity<ClienteEntity> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
         //@PathVariable vincula id con {id}
 
-        Optional<Cliente> clienteOpt = clienteRepository.findById(id); //
+        Optional<ClienteEntity> clienteOpt = clienteRepository.findById(id); //
         // @PathVariable
         // envuelve el id y el null
         // Opción 1
@@ -73,23 +74,20 @@ public class ClienteController {
     /**
      * Crear un nuevo cliente en la base de datos.
      * Método POST, no colisiona con findAll, porque son diferentes métodos HTTP: GET vs. POST.
-     * @param cliente
+     * @param clienteEntity
      * @param headers
      * @return
      */
     @PostMapping("/api/clientes") // Como son métodos diferentes no colisionan las url.
     @Operation(summary = "Crear un cliente", description = "Con este método podemos dar de alta a un cliente en la base" +
             " de datos.")
-    public ResponseEntity<Cliente> create(@RequestBody Cliente cliente, @RequestHeader HttpHeaders headers){
-        // También podría devolver un void o lo que se necesite
-        System.out.println(headers.get("User-Agent")); // No siempre es necesario las cabeceras.
+    public ResponseEntity<ClienteEntity> create(@RequestBody ClienteEntity clienteEntity, @RequestHeader HttpHeaders headers){
         // Guardar el cliente recibido por parámetro en la base de datos.
-        if (cliente.getId() != null){ // Quiere decir que existe el id, y por lo tanto no es una creación.
+        if (clienteEntity.getIdCliente() != null){ // Quiere decir que existe el id, y por lo tanto no es una creación.
             log.warn("trying to create a customer with id");
-            System.out.println("trying to create a customer with id");
             return ResponseEntity.badRequest().build();
         }
-        Cliente result = clienteRepository.save(cliente);
+        ClienteEntity result = clienteRepository.save(clienteEntity);
         return ResponseEntity.ok(result); // El cliente devuelto tiene una clave primaria.
     }
 
@@ -100,18 +98,18 @@ public class ClienteController {
     @PutMapping("/api/clientes")
     @Operation(summary = "Modificar datos de cliente", description = "Modificar los datos de un cliente en la base." +
             "de datos según clave primaria id Long")
-    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
-        if(cliente.getId() == null){ // si no tiene id quiere decir que si es una creación.
+    public ResponseEntity<ClienteEntity> update(@RequestBody ClienteEntity clienteEntity) {
+        if(clienteEntity.getIdCliente() == null){ // si no tiene id quiere decir que si es una creación.
             log.warn("Trying to update a non existent customer");
             return ResponseEntity.badRequest().build();
         }
-        if(!clienteRepository.existsById(cliente.getId())) {
+        if(!clienteRepository.existsById(clienteEntity.getIdCliente())) {
             log.warn("Trying to update a non existent customer");
             return ResponseEntity.notFound().build();
         }
 
         // El proceso de actualización.
-        Cliente result = clienteRepository.save(cliente);
+        ClienteEntity result = clienteRepository.save(clienteEntity);
         return ResponseEntity.ok(result); // El cliente devuelto tiene una clave primaria.
     }
 
@@ -119,7 +117,7 @@ public class ClienteController {
     @Operation(summary = "ATENCIÓN: eliminar un cliente", description = "Con este método podemos eliminar a un " +
             "cliente según su clave primaria id Long")
     @DeleteMapping("/api/cliente/{id}")
-    public ResponseEntity<Cliente> delete(@PathVariable Long id) {
+    public ResponseEntity<ClienteEntity> delete(@PathVariable Long id) {
         if (!clienteRepository.existsById(id)) {
             log.warn("Trying to delete a non existent customer");
             return ResponseEntity.notFound().build();
@@ -128,13 +126,13 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    // Borrar todos los cliente de la base de datos
+    // Borrar todos los clientes de la base de datos
 
     @Operation(summary = "ATENCIÓN: eliminar TODOS los clientes", description = "Con este método eliminamos todos los " +
             "clientes de la base de datos")
     @Hidden
     @DeleteMapping("/api/clientes")
-    public ResponseEntity<Cliente> deleteAll() {
+    public ResponseEntity<ClienteEntity> deleteAll() {
         log.info("REST Request for delete all customers");
         clienteRepository.deleteAll();
         return ResponseEntity.noContent().build();

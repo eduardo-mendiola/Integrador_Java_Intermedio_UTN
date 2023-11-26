@@ -32,15 +32,15 @@ Una importante empresa de soporte operativo solicita el diseño y desarrollo de 
 
 ### Ciclo de vida de un incidente
 
-- Cuando un **cliente** llama, la mesa de ayuda le solicita los datos para **identificarlo (razón social, CUIT)** y los ingresa en el sistema para que el mismo le **muestre los servicios que el cliente tiene contratados.**
+- Cuando un **clienteEntity** llama, la mesa de ayuda le solicita los datos para **identificarlo (razón social, CUIT)** y los ingresa en el sistema para que el mismo le **muestre los servicios que el clienteEntity tiene contratados.**
 
 - El operador (de la mesa de ayuda) solicita que le informen **por cuál de esos servicios desea reportar un incidente**, junto con una **descripción del problema y el tipo del problema.**
 
-- Al ingresar el incidente, el sistema devuelve un **listado de técnicos** disponibles para resolver el problema. El operador selecciona uno de los técnicos disponibles y el sistema le informa el **tiempo estimado de resolución**. Luego, **informa al cliente que el incidente ha sido ingresado y la fecha posible de resolución.**
+- Al ingresar el incidente, el sistema devuelve un **listado de técnicos** disponibles para resolver el problema. El operador selecciona uno de los técnicos disponibles y el sistema le informa el **tiempo estimado de resolución**. Luego, **informa al clienteEntity que el incidente ha sido ingresado y la fecha posible de resolución.**
 
 - Al confirmarse el incidente, **el sistema debe enviar una notificación al técnico** informándole que tiene un nuevo incidente para resolver.
 
-- Cuando el técnico atiende y resuelve el incidente, lo debe marcar como **“resuelto”**, indicando las consideraciones que crea necesarias. Cuando esto ocurra, el sistema debe enviar un email al cliente informándole que su incidente ya está solucionado.
+- Cuando el técnico atiende y resuelve el incidente, lo debe marcar como **“resuelto”**, indicando las consideraciones que crea necesarias. Cuando esto ocurra, el sistema debe enviar un email al clienteEntity informándole que su incidente ya está solucionado.
 
 ### Otros requerimientos
 

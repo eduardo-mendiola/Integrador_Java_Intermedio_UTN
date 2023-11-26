@@ -1,7 +1,9 @@
 package com.tpIntegrador.IncidentManager.controller;
 
-import com.tpIntegrador.IncidentManager.model.entity.TecnicoEntity;
-import com.tpIntegrador.IncidentManager.repository.TecnicoRepository;
+
+import com.tpIntegrador.IncidentManager.model.entity.EspecialidadTecnologiaEntity;
+import com.tpIntegrador.IncidentManager.model.entity.EspecialidadTecnologiaIdEntity;
+import com.tpIntegrador.IncidentManager.repository.EspecialidadTecnologiaRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,53 +19,39 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-public class TecnicoController {
+public class EspecialidadTecnologiaController {
 
-    private final Logger log = LoggerFactory.getLogger(TecnicoController.class);
+    private final Logger log = LoggerFactory.getLogger(EspecialidadTecnologiaController.class);
     // Atributos
-    private TecnicoRepository tecnicoRepository;
+    private EspecialidadTecnologiaRepository especialidadTecnologiaRepository;
     // Construct
-    public TecnicoController(TecnicoRepository tecnicoRepository) {
-        this.tecnicoRepository = tecnicoRepository;
+    public EspecialidadTecnologiaController(EspecialidadTecnologiaRepository especialidadTecnologiaRepository) {
+        this.especialidadTecnologiaRepository = especialidadTecnologiaRepository;
     }
 
 
     // CRUD sobre la entidad Técnico.
 
-    /**
-     * Buscar todos los técnicos que hay en la base de datos (ArrayList de técnicos)
-     * http://localhost:8080/api/tecnicos
-     * @return
-    */
-    @GetMapping("/api/tecnicos") // el nombre de la entidad en plural y api porque es una api rest.
+    @GetMapping("/api/especialidadTecnologias") // el nombre de la entidad en plural y api porque es una api rest.
     @Operation(summary = "Consultar todos los técnicos", description = "Busca todos los técnicos de la base de datos.")
-    public List<TecnicoEntity> findAll(){
+    public List<EspecialidadTecnologiaIdEntity> findAll(){
         // Recuperar y devolver los técnicos de la base de datos.
-        return tecnicoRepository.findAll();
+        return especialidadTecnologiaRepository.findAll();
     }
 
-    /**
-     * http://localhost:8080/api/tecnicos/1 ...etc
-     * Request
-     * Response
-     * @param id
-     * @return
-     */
-
     // Buscar un solo técnico en la base de datos según su id.
-    @GetMapping("/api/tecnicos/{id}") // {id} es un parametro variable que generara por ejemplo /api/tecnicos/2.
+    @GetMapping("/api/especialidadTecnologias/{id}") // {id} es un parametro variable que generara por ejemplo
+    // /api/tecnicos/2.
     @Operation(summary = "Buscar por id", description = "Busca un técnico por clave primaria id Long")
-    public ResponseEntity<TecnicoEntity> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
+    public ResponseEntity<EspecialidadTecnologiaIdEntity> findOneById(@Parameter(description = "Clave primaria tipo Long") @PathVariable Long id) {
         //@PathVariable vincula id con {id}
 
-        Optional<TecnicoEntity> tecOpt = tecnicoRepository.findById(id); //
-        // @PathVariable
-        // envuelve el id y el null
-        // Opción 1
+        Optional<EspecialidadTecnologiaIdEntity> esptecOpt = especialidadTecnologiaRepository.findById(id); //
 
-        if(tecOpt.isPresent()) {
+
+        if(esptecOpt.isPresent()) {
             // Con ResponseEntity obtenemos un 404 si no se encuentra el técnico.
-            return ResponseEntity.ok(tecOpt.get()); // devuelve el técnico.
+            return ResponseEntity.ok(esptecOpt.get()); // devuelve el técnico.
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -71,23 +59,20 @@ public class TecnicoController {
 
     // Crear un nuevo técnico en la base de datos
 
-    /**
-     * Crear un nuevo técnico en la base de datos.
-     * Método POST, no colisiona con findAll, porque son diferentes métodos HTTP: GET vs. POST.
-     */
-    @PostMapping("/api/tecnicos") // Como son métodos diferentes no colisionan las url.
+    @PostMapping("/api/especialidadTecnologias") // Como son métodos diferentes no colisionan las url.
     @Operation(summary = "Crear un técnico", description = "Con este método podemos dar de alta a un técnico en la base" +
             " de datos.")
-    public ResponseEntity<TecnicoEntity> create(@RequestBody TecnicoEntity tecnico, @RequestHeader HttpHeaders headers){
+    public ResponseEntity<EspecialidadTecnologiaIdEntity> create(@RequestBody EspecialidadTecnologiaIdEntity especialidadTecnologiaId,
+                                                                @RequestHeader HttpHeaders headers){
         // También podría devolver un void o lo que se necesite.
         System.out.println(headers.get("User-Agent")); // No siempre es necesario las cabeceras.
         // Guardar el técnico recibido por parámetro en la base de datos.
-        if (tecnico.getIdTecnico() != null){ // Quiere decir que existe el id, y por lo tanto no es una creación.
+        if (especialidadTecnologiaId.getEspecialidadId() != null){ // Quiere decir que existe el id, y por lo tanto no es una creación.
             log.warn("trying to create a technical with id");
             System.out.println("trying to create a technical with id");
             return ResponseEntity.badRequest().build();
         }
-        TecnicoEntity result = tecnicoRepository.save(tecnico);
+        EspecialidadTecnologiaIdEntity result = especialidadTecnologiaRepository.save(especialidadTecnologiaId);
         return ResponseEntity.ok(result); // El técnico devuelto tiene una clave primaria.
     }
 
@@ -95,21 +80,21 @@ public class TecnicoController {
     /**
      * Actualizar los datos de un técnico en la base de datos.
      */
-    @PutMapping("/api/tecnicos")
+    @PutMapping("/api/especialidadTecnologias")
     @Operation(summary = "Modificar datos de técnico", description = "Modificar los datos de un técnico en la base." +
             "de datos según clave primaria id Long")
-    public ResponseEntity<TecnicoEntity> update(@RequestBody TecnicoEntity tecnico) {
-        if(tecnico.getIdTecnico() == null){ // si no tiene id quiere decir que si es una creación.
+    public ResponseEntity<EspecialidadTecnologiaIdEntity> update(@RequestBody EspecialidadTecnologiaIdEntity especialidadTecnologia) {
+        if(especialidadTecnologia.getEspecialidadId() == null){ // si no tiene id quiere decir que si es una creación.
             log.warn("Trying to update a non existent technical");
             return ResponseEntity.badRequest().build();
         }
-        if(!tecnicoRepository.existsById(tecnico.getIdTecnico())) {
+        if(!especialidadTecnologiaRepository.existsById(especialidadTecnologia.getEspecialidadId())) {
             log.warn("Trying to update a non existent technical");
             return ResponseEntity.notFound().build();
         }
 
         // El proceso de actualización.
-        TecnicoEntity result = tecnicoRepository.save(tecnico);
+        EspecialidadTecnologiaIdEntity result = especialidadTecnologiaRepository.save(especialidadTecnologia);
         return ResponseEntity.ok(result); // El técnico devuelto tiene una clave primaria.
     }
 
@@ -117,13 +102,13 @@ public class TecnicoController {
     // Borrar un técnico en la base de datos por id.
     @Operation(summary = "ATENCIÓN: eliminar un técnico", description = "Con este método podemos eliminar a un " +
             "técnico según su clave primaria id Long")
-    @DeleteMapping("/api/tecnicos/{id}")
-    public ResponseEntity<TecnicoEntity> delete(@PathVariable Long id) {
-        if (!tecnicoRepository.existsById(id)) {
+    @DeleteMapping("/api/especialidadTecnologias/{id}")
+    public ResponseEntity<EspecialidadTecnologiaIdEntity> delete(@PathVariable Long id) {
+        if (!especialidadTecnologiaRepository.existsById(id)) {
             log.warn("Trying to delete a non existent technical");
             return ResponseEntity.notFound().build();
         }
-        tecnicoRepository.deleteById(id);
+        especialidadTecnologiaRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -132,10 +117,10 @@ public class TecnicoController {
     @Operation(summary = "ATENCIÓN: eliminar TODOS los técnicos", description = "Con este método eliminamos todos los " +
             "técnicos de la base de datos")
     @Hidden
-    @DeleteMapping("/api/tecnicos")
-    public ResponseEntity<TecnicoEntity> deleteAll() {
+    @DeleteMapping("/api/especialidadTecnologias")
+    public ResponseEntity<EspecialidadTecnologiaIdEntity> deleteAll() {
         log.info("REST Request for delete all technicals");
-        tecnicoRepository.deleteAll();
+        especialidadTecnologiaRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
 

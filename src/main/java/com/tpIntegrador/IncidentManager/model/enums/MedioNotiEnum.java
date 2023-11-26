@@ -1,11 +1,11 @@
-package com.tpIntegrador.IncidentManager.model;
+package com.tpIntegrador.IncidentManager.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MedioNoti {
+public enum MedioNotiEnum {
     EMAIL("email"),
     WHATSAPP("mensaje de texto de Whatsapp"),
     TEL("llama telefonica para aviso"),

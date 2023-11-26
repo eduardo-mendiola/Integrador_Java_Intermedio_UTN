@@ -1,7 +1,6 @@
 package com.tpIntegrador.IncidentManager;
 
 
-import com.tpIntegrador.IncidentManager.model.Cliente;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
