@@ -2,7 +2,7 @@
 
 ## Progreso y estado del tp
 
-- Puede conectar con la base de datos y estoy trabajando en la vinculación de las diferentes tablas.
+- Sigo con problemas al relacionar las tablas con ManyToMany, no puedo realizar las consultas que genere la relación de la tabla intermedia.
 
 
  SOPORTE("Servicio de Soporte"),

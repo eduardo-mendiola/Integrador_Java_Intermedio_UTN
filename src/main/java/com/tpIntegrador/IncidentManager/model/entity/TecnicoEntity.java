@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 // Lombok
 @NoArgsConstructor
@@ -49,6 +50,6 @@ public class TecnicoEntity {
         joinColumns = @JoinColumn(name = "tecnico_id"),
         inverseJoinColumns = @JoinColumn(name = "especialidad_id"))
     @Hidden
-    private Collection<EspecialidadEntity> especialidades;
+    private List<EspecialidadEntity> especialidades;
 
 }

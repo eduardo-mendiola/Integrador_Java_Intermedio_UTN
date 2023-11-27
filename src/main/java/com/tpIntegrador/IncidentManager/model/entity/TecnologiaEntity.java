@@ -4,8 +4,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,11 +22,11 @@ public class TecnologiaEntity {
 
     @ManyToMany(mappedBy = "tecnologias", cascade = CascadeType.ALL)
     @Hidden // Anotación para ignorar en Swagger
-    private Collection<ContratoEntity> contrato;
+    private List<EspecialidadEntity> especialidades;
 
     @ManyToMany(mappedBy = "tecnologias", cascade = CascadeType.ALL)
     @Hidden // Anotación para ignorar en Swagger
-    private Collection<EspecialidadEntity> especialidades;
+    private List<ContratoEntity> contrato;
 }
 
 

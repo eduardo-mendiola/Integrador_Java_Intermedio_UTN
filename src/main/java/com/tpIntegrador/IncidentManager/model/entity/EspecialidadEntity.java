@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,21 +24,22 @@ public class EspecialidadEntity {
     @Column(name = "nombre")
     private String nombre;
 
+
     @ManyToMany
     @JoinTable(
         name = "Especialidad_tecnologia",
         joinColumns = @JoinColumn(name = "especialidad_id"),
         inverseJoinColumns = @JoinColumn(name = "tecnologia_id"))
-    @Hidden // Anotación para ignorar en Swagger
-    private Collection<TecnologiaEntity> tecnologias;
+    //@Hidden // Anotación para ignorar en Swagger
+    private List<TecnologiaEntity> tecnologias;
 
     @ManyToMany(mappedBy = "especialidades",cascade = CascadeType.ALL)
-    @Hidden // Anotación para ignorar en Swagger
-    private Collection<TecnicoEntity> tecnicos;
+    //@Hidden // Anotación para ignorar en Swagger
+    private List<TecnicoEntity> tecnicos;
 
     @ManyToMany(mappedBy = "especialidades",cascade = CascadeType.ALL)
-    @Hidden // Anotación para ignorar en Swagger
-    private Collection<TipoProblemaEntity> tiposProblemas;
+    //@Hidden // Anotación para ignorar en Swagger
+    private List<TipoProblemaEntity> tiposProblemas;
 
 }
 

@@ -72,9 +72,6 @@ public class TecnologiaController {
     /**
      * Crear una nueva tecnología en la base de datos.
      * Método POST, no colisiona con findAll, porque son diferentes métodos HTTP: GET vs. POST.
-     * @param tecnologiaEntity
-     * @param headers
-     * @return
      */
     @PostMapping("/api/tecnologias") // Como son métodos diferentes no colisionan las url.
     @Operation(summary = "Crear una tecnología", description = "Con este método podemos dar de alta a un técnico en la " +
@@ -138,5 +135,7 @@ public class TecnologiaController {
         tecnologiaRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
+
+
 
 }
